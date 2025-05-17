@@ -1,148 +1,133 @@
 import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 
-function UserAdd() {
-  const [formData, setFormData] = useState({
-    name: '',
-    surname: '',
+const UserAdd = ({ onAdd, onCancel }) => {
+  const [form, setForm] = useState({
+    nom: '',
     email: '',
+    role: '',
     password: '',
     confirmPassword: '',
-    role: 'USER', // valeurs alignées avec backend
   });
 
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setMessage("Les mots de passe ne correspondent pas");
+    // Validation simple
+    if (!form.nom || !form.email || !form.role || !form.password || !form.confirmPassword) {
+      setError('Veuillez remplir tous les champs obligatoires.');
       return;
     }
 
-    // Préparer le payload sans confirmPassword
-    const { confirmPassword, ...payload } = formData;
+    if (form.password !== form.confirmPassword) {
+      setError('Les mots de passe ne correspondent pas.');
+      return;
+    }
 
-    fetch('http://localhost:3001/api/utilisateurs/inscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    .then(async res => {
-      if (!res.ok) {
-        const error = await res.json().catch(() => ({}));
-        throw new Error(error.message || 'Erreur lors de la création');
-      }
-      return res.json();
-    })
-    .then(() => {
-      setMessage("Utilisateur ajouté avec succès !");
-      setFormData({
-        name: '',
-        surname: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        role: 'USER',
-      });
-    })
-    .catch(err => {
-      setMessage(err.message);
-    });
+    setError('');
+    // Enlever confirmPassword avant d’envoyer
+    const { confirmPassword, ...userData } = form;
+    onAdd(userData);
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Ajouter un utilisateur</h2>
-      {message && <Alert variant="info">{message}</Alert>}
+    <Container className="py-4">
+      <h3>Ajouter un nouvel utilisateur</h3>
+      {error && <Alert variant="danger">{error}</Alert>}
 
       <Form onSubmit={handleSubmit}>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group controlId="nom">
+              <Form.Label>Nom complet *</Form.Label>
+              <Form.Control
+                type="text"
+                name="nom"
+                value={form.nom}
+                onChange={handleChange}
+                placeholder="Entrez le nom complet"
+              />
+            </Form.Group>
+          </Col>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Nom</Form.Label>
-          <Form.Control
-            type="text"
-            name="name"
-            placeholder="Entrez le nom"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+          <Col md={6}>
+            <Form.Group controlId="email">
+              <Form.Label>Email *</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Entrez l'email"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Prénom</Form.Label>
-          <Form.Control
-            type="text"
-            name="surname"
-            placeholder="Entrez le prénom"
-            value={formData.surname}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group controlId="role">
+              <Form.Label>Rôle *</Form.Label>
+              <Form.Control
+                as="select"
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+              >
+                <option value="">-- Sélectionnez un rôle --</option>
+                <option value="admin">Administrateur</option>
+                <option value="user">Utilisateur</option>
+                <option value="manager">Manager</option>
+              </Form.Control>
+            </Form.Group>
+          </Col>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            name="email"
-            placeholder="Entrez l'email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+          <Col md={6}>
+            <Form.Group controlId="password">
+              <Form.Label>Mot de passe *</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="Entrez le mot de passe"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Mot de passe</Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            placeholder="Entrez le mot de passe"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+        <Row className="mb-4">
+          <Col md={6}>
+            <Form.Group controlId="confirmPassword">
+              <Form.Label>Confirmer mot de passe *</Form.Label>
+              <Form.Control
+                type="password"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirmez le mot de passe"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Confirmer le mot de passe</Form.Label>
-          <Form.Control
-            type="password"
-            name="confirmPassword"
-            placeholder="Répétez le mot de passe"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Rôle</Form.Label>
-          <Form.Select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            required
-          >
-            <option value="ADMIN">Administrateur</option>
-            <option value="USER">Utilisateur</option>
-          </Form.Select>
-        </Form.Group>
-
-        <Button variant="primary" type="submit">
-          Enregistrer
-        </Button>
+        <div>
+          <Button variant="secondary" className="me-2" onClick={onCancel}>
+            Annuler
+          </Button>
+          <Button variant="success" type="submit">
+            Ajouter
+          </Button>
+        </div>
       </Form>
-    </div>
+    </Container>
   );
-}
+};
 
 export default UserAdd;

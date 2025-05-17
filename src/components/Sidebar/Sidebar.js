@@ -1,68 +1,39 @@
 import React from 'react';
+import { Nav } from 'react-bootstrap';
+import { HouseDoor, People, Gear } from 'react-bootstrap-icons';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaUser, FaList, FaCog, FaChartBar } from 'react-icons/fa';
-import '../../styles/Sidebar/Sidebar.css';
-import isstmLogo from '../../assets/logo.png';
 
-function Sidebar() {
+const Sidebar = () => {
   const location = useLocation();
-  const isActive = (path) => location.pathname === path;
 
-  // 🔐 Récupération du rôle depuis localStorage
-  const user = JSON.parse(localStorage.getItem('user'));
-  const role = user?.role || 'USER';
-console.log(role)
+  const navItems = [
+    { to: '/', label: 'Dashboard', icon: <HouseDoor /> },
+    { to: '/etudiants', label: 'Étudiants', icon: <People /> },
+    { to: '/parametres', label: 'Paramètres', icon: <Gear /> },
+  ];
+
   return (
-    <div className="sidebar text-white p-3" style={{ width: '250px' }}>
-      <div className="sidebar-header">
-        <img
-          src={isstmLogo}
-          alt="Logo ISSTM"
-          style={{ width: '120px', height: 'auto' }}
-        />
+    <div className="bg-light border-end vh-100 d-flex flex-column p-3 sidebar">
+      <div className="mb-4">
+        <h4 className="text-center fw-bold">ISSTM</h4>
       </div>
 
-      <ul className="sidebar-menu">
-        <li className={`menu-item ${isActive('/dashboard') ? 'active' : ''}`}>
-          <Link to="/dashboard" className="menu-link">
-            <FaHome className="menu-icon" />
-            <span>Accueil</span>
-          </Link>
-        </li>
-
-        {/* ✅ Affichage conditionnel du menu "Utilisateurs" si role = 'admin' */}
-        {role === 'ADMIN' && (
-          <li className={`menu-item ${isActive('/utilisateurs') ? 'active' : ''}`}>
-            <Link to="/utilisateurs" className="menu-link">
-              <FaUser className="menu-icon" />
-              <span>Utilisateurs</span>
-            </Link>
-          </li>
-        )}
-
-        <li className={`menu-item ${isActive('/etudiants') ? 'active' : ''}`}>
-          <Link to="/etudiants" className="menu-link">
-            <FaList className="menu-icon" />
-            <span>Liste des étudiants</span>
-          </Link>
-        </li>
-
-        <li className={`menu-item ${isActive('/statistiques') ? 'active' : ''}`}>
-          <Link to="/statistiques" className="menu-link">
-            <FaChartBar className="menu-icon" />
-            <span>Statistiques</span>
-          </Link>
-        </li>
-
-        <li className={`menu-item ${isActive('/parametres') ? 'active' : ''}`}>
-          <Link to="/parametres" className="menu-link">
-            <FaCog className="menu-icon" />
-            <span>Paramètres</span>
-          </Link>
-        </li>
-      </ul>
+      <Nav className="flex-column">
+        {navItems.map((item, index) => (
+          <Nav.Item key={index}>
+            <Nav.Link
+              as={Link}
+              to={item.to}
+              className={`d-flex align-items-center gap-2 px-3 py-2 ${location.pathname === item.to ? 'active-link' : ''}`}
+            >
+              {item.icon}
+              {item.label}
+            </Nav.Link>
+          </Nav.Item>
+        ))}
+      </Nav>
     </div>
   );
-}
+};
 
 export default Sidebar;

@@ -1,101 +1,36 @@
-// src/pages/Settings/About.jsx
-import React from "react";
-import { Card, Container, Row, Col } from "react-bootstrap";
+import React from 'react';
+import { Container, Row, Col, Card, Image } from 'react-bootstrap';
+import logo from '../../assets/LOGO.png'; // remplace par le chemin correct si besoin
 
-export default function About() {
+const About = () => {
   return (
-    <Container className="mt-4">
-      <h2 className="mb-4">Paramètres &amp; À propos</h2>
-
-      {/* À propos de l'application */}
-      <Card className="mb-4">
-        <Card.Header>À propos de l'application</Card.Header>
-        <Card.Body>
-          <p>
-            Cette application de gestion statistique a été développée pour
-            simplifier le suivi des étudiants et utilisateurs. Inspirée du style
-            Vuxy, elle offre une interface claire.
-          </p>
-          <ul>
-            <li>
-              <strong>Version :</strong> 1.0.0
-            </li>
-            <li>
-              <strong>Auteur :</strong> RASOLOFONIAINA Clarita
-            </li>
-            <li>
-              <strong>Nom d'application :</strong> SIM-ISSTM (Système
-              d’Informations des Membres ISSTM)
-            </li>
-            <li>
-              <strong>Git :</strong>{" "}
-              <a href="https://github.com/Clarita511" target="_blank">
-                Clarita511
-              </a>
-            </li>
-            <li>
-              <strong>Contact :</strong>{" "}
-              <a href="mailto:claritarasolofoniaina022@gmail.com">
-                claritarasolofoniaina022@gmail.com
-              </a>
-            </li>
-          </ul>
-
-          <p>
-            <em>C'est une gestion d'étudiants ISSTM.</em>
-          </p>
-        </Card.Body>
-      </Card>
-
-      {/* Paramètres généraux */}
-      <Card className="mb-4">
-        <Card.Header>Paramètres généraux</Card.Header>
-        <Card.Body>
-          <Row>
-            <Col md={6}>
+    <Container className="py-5">
+      <Row className="align-items-center">
+        <Col md={6} className="mb-4">
+          <Image src={logo} alt="Logo ISSTM" fluid rounded />
+        </Col>
+        <Col md={6}>
+          <Card className="border-0 shadow-sm">
+            <Card.Body>
+              <h4 className="mb-3">À propos de l'application</h4>
               <p>
-                <strong>Langue :</strong> Français
+                Cette plateforme a été conçue pour simplifier la gestion des étudiants au sein de l’<strong>ISSTM</strong> (Institut Supérieur des Sciences, Technologies et Méthodes).
               </p>
-            </Col>
-            <Col md={6}>
               <p>
-                <strong>Mode :</strong> Clair
+                Elle permet de gérer facilement les préinscriptions, les résultats, la vie scolaire ainsi que les statistiques liées aux filières et aux niveaux. C’est un outil moderne, sécurisé, et accessible en ligne.
               </p>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
               <p>
-                <strong>Notifications :</strong> Activées
+                Développée avec <strong>React</strong>, <strong>Spring Boot</strong> et <strong>Bootstrap</strong>, elle vise à améliorer le quotidien administratif des étudiants et des responsables pédagogiques.
               </p>
-            </Col>
-            <Col md={6}>
-              <p>
-                <strong>Support :</strong>{" "}
-                <a href="mailto:support@educuma.org">support@educuma.org</a>
+              <p className="text-muted small mb-0">
+                Version : 1.0 — Dernière mise à jour : Mai 2025
               </p>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
-
-      {/* Informations développeur */}
-      <Card>
-        <Card.Header>Informations développeur</Card.Header>
-        <Card.Body>
-          <p>
-            Cette application a été conçue et développée par{" "}
-            <strong>RASOLOFONIAINA Clarita</strong>, étudiante à l'ISSTM
-            Mahajanga.
-          </p>
-          <p>
-            Pour plus d'informations ou collaborations, contactez-nous via{" "}
-            <a href="mailto:claritarasolofoniaina022@gmail.com">
-                claritarasolofoniaina022@gmail.com
-              </a>
-          </p>
-        </Card.Body>
-      </Card>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
-}
+};
+
+export default About;

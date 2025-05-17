@@ -1,104 +1,157 @@
-// src/pages/Register.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaUserTag } from 'react-icons/fa';
+import { Container, Row, Col, Card, Form, Button, InputGroup } from 'react-bootstrap';
+import { Eye, EyeSlash } from 'react-bootstrap-icons';
 
-function Register() {
-    const [formData, setFormData] = useState({
-      nom: '', prenom: '', email: '',
-      password: '', confirmPassword: '', role: ''
-    });
-    const navigate = useNavigate();
-  
-    const handleChange = (e) =>
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      if (formData.password !== formData.confirmPassword) {
-        alert('Les mots de passe ne correspondent pas !');
-        return;
+const Register = () => {
+  const [form, setForm] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [showPwd, setShowPwd] = useState(false);
+  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    setError('');
+    setSuccess('');
+
+    if (form.password !== form.confirmPassword) {
+      return setError('Les mots de passe ne correspondent pas.');
+    }
+
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstname: form.firstname,
+          lastname: form.lastname,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      if (response.ok) {
+        setSuccess('Inscription réussie. Vous pouvez maintenant vous connecter.');
+        setForm({
+          firstname: '',
+          lastname: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        });
+      } else {
+        const resData = await response.json();
+        setError(resData.message || "Erreur lors de l'inscription.");
       }
-  
-      try {
-        const { data } = await axios.post(
-          'http://localhost:3001/api/utilisateurs/inscription',
-          {
-            name: formData.nom,
-            surname: formData.prenom,
-            email: formData.email,
-            password: formData.password,
-            role: formData.role,
-          }
-        );
-  
-        alert(data.message || 'Compte créé avec succès !');
-        navigate('/');
-      } catch (err) {
-        console.error('Erreur lors de l’inscription :', err.response?.data || err.message);
-        alert(err.response?.data?.message || 'Erreur lors de l’inscription !');
-      }
-    };
+    } catch (err) {
+      setError('Erreur de connexion au serveur.');
+    }
+  };
+
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div className="card shadow-sm p-3" style={{ width: '100%', maxWidth: '400px', borderRadius: '0.75rem' }}>
-        <h4 className="text-center mb-3 text-primary">Créer un compte</h4>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <label className="form-label small">
-              <FaUser className="me-1 text-muted" /> Nom
-            </label>
-            <input type="text" className="form-control rounded-pill px-3 py-1" name="nom" value={formData.nom} onChange={handleChange} required />
-          </div>
+    <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+      <Row className="w-100 justify-content-center">
+        <Col xs={11} sm={8} md={6} lg={5}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h3 className="text-center mb-4">Créer un compte</h3>
 
-          <div className="mb-2">
-            <label className="form-label small">
-              <FaUser className="me-1 text-muted" /> Prénom
-            </label>
-            <input type="text" className="form-control rounded-pill px-3 py-1" name="prenom" value={formData.prenom} onChange={handleChange} required />
-          </div>
+              {error && <div className="alert alert-danger">{error}</div>}
+              {success && <div className="alert alert-success">{success}</div>}
 
-          <div className="mb-2">
-            <label className="form-label small">
-              <FaEnvelope className="me-1 text-muted" /> Email
-            </label>
-            <input type="email" className="form-control rounded-pill px-3 py-1" name="email" value={formData.email} onChange={handleChange} required />
-          </div>
+              <Form onSubmit={handleRegister}>
+                <Row>
+                  <Col>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Prénom</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="firstname"
+                        value={form.firstname}
+                        onChange={handleChange}
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Nom</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="lastname"
+                        value={form.lastname}
+                        onChange={handleChange}
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-          <div className="mb-2">
-            <label className="form-label small">
-              <FaLock className="me-1 text-muted" /> Mot de passe
-            </label>
-            <input type="password" className="form-control rounded-pill px-3 py-1" name="password" value={formData.password} onChange={handleChange} required />
-          </div>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
 
-          <div className="mb-2">
-            <label className="form-label small">
-              <FaLock className="me-1 text-muted" /> Confirmer
-            </label>
-            <input type="password" className="form-control rounded-pill px-3 py-1" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
-          </div>
+                <Form.Group className="mb-3">
+                  <Form.Label>Mot de passe</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={showPwd ? 'text' : 'password'}
+                      name="password"
+                      value={form.password}
+                      onChange={handleChange}
+                      required
+                    />
+                    <Button variant="outline-secondary" onClick={() => setShowPwd(!showPwd)}>
+                      {showPwd ? <EyeSlash /> : <Eye />}
+                    </Button>
+                  </InputGroup>
+                </Form.Group>
 
-          <div className="mb-3">
-            <label className="form-label small">
-              <FaUserTag className="me-1 text-muted" /> Rôle
-            </label>
-            <select className="form-select rounded-pill px-3 py-1" name="role" value={formData.role} onChange={handleChange} required>
-              <option value="">-- Rôle --</option>
-              <option value="USER">Utilisateur</option>
-              <option value="ADMIN">Administrateur</option>
-            </select>
-          </div>
+                <Form.Group className="mb-4">
+                  <Form.Label>Confirmer le mot de passe</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={showConfirmPwd ? 'text' : 'password'}
+                      name="confirmPassword"
+                      value={form.confirmPassword}
+                      onChange={handleChange}
+                      required
+                    />
+                    <Button variant="outline-secondary" onClick={() => setShowConfirmPwd(!showConfirmPwd)}>
+                      {showConfirmPwd ? <EyeSlash /> : <Eye />}
+                    </Button>
+                  </InputGroup>
+                </Form.Group>
 
-          <button type="submit" className="btn btn-primary w-100 rounded-pill py-1 mb-2">S'inscrire</button>
-          <p className="text-center small mb-0">
-            Vous avez déjà un compte ? <Link to="/" className="text-decoration-none text-primary">Se connecter</Link>
-          </p>
-        </form>
-      </div>
-    </div>
+                <Button type="submit" variant="primary" className="w-100">
+                  S'inscrire
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
-}
+};
 
 export default Register;

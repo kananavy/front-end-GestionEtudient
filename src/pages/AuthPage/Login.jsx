@@ -1,75 +1,88 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaUser, FaLock } from 'react-icons/fa';
-import axios from 'axios';
+import { Container, Row, Col, Form, Button, Card, InputGroup } from 'react-bootstrap';
+import { Eye, EyeSlash } from 'react-bootstrap-icons';
 
-function Login() {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [showPwd, setShowPwd] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
+    // Exemple : connexion à une API
     try {
-      const { data } = await axios.post('http://localhost:3001/api/utilisateurs/connexion', {
-        email,
-        password,
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
       });
 
-      localStorage.setItem('token', data.token); // Ou sessionStorage
-      localStorage.setItem('user', JSON.stringify(data.user)); // Facultatif
-      navigate('/dashboard');
-    } catch (error) {
-      alert(error.response?.data?.message || "Erreur de connexion");
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Login success:', data);
+        // Stocker le token, rediriger, etc.
+      } else {
+        setError('Identifiants invalides');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Erreur de connexion');
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div className="card shadow-sm p-3" style={{ width: '100%', maxWidth: '400px', borderRadius: '0.75rem' }}>
-        <h4 className="text-center mb-3 text-primary">Connexion</h4>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label small">
-              <FaUser className="me-1 text-muted" /> Email
-            </label>
-            <input
-              type="email"
-              className="form-control rounded-pill px-3 py-1"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              placeholder="Entrez votre email"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="form-label small">
-              <FaLock className="me-1 text-muted" /> Mot de passe
-            </label>
-            <input
-              type="password"
-              className="form-control rounded-pill px-3 py-1"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              placeholder="Entrez votre mot de passe"
-            />
-          </div>
-          <button type="submit" className="btn btn-primary w-100 rounded-pill py-1 mb-2">
-            Se connecter
-          </button>
+    <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+      <Row className="w-100 justify-content-center">
+        <Col xs={11} sm={8} md={6} lg={4}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h3 className="text-center mb-4">Connexion</h3>
 
-          <p className="text-center small mb-0">
-            Vous n’avez pas encore de compte ?{' '}
-            <Link to="/register" className="text-decoration-none text-primary">
-              Créer un compte
-            </Link>
-          </p>
-        </form>
-      </div>
-    </div>
+              {error && <div className="alert alert-danger">{error}</div>}
+
+              <Form onSubmit={handleLogin}>
+                <Form.Group controlId="email" className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="ex: etudiant@isstm.mg"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="password" className="mb-3">
+                  <Form.Label>Mot de passe</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={showPwd ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <Button
+                      variant="outline-secondary"
+                      onClick={() => setShowPwd(!showPwd)}
+                    >
+                      {showPwd ? <EyeSlash /> : <Eye />}
+                    </Button>
+                  </InputGroup>
+                </Form.Group>
+
+                <Button type="submit" variant="primary" className="w-100">
+                  Se connecter
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
-}
+};
 
 export default Login;
