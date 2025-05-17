@@ -1,0 +1,110 @@
+/* Style général de l'en-tête */
+.header {
+  position: fixed;
+  top: 0;
+  height: 70px;
+  background-color: rgb(17, 59, 5);
+  color: white;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  width: 100%;
+}
+
+/* Quand la sidebar est ouverte */
+.header.sidebar-open {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+}
+
+/* Plein écran quand la sidebar est fermée */
+.header.sidebar-closed {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Section droite */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.notification-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.notification-btn:hover {
+  transform: scale(1.1);
+  color: #ffbb33;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+  position: relative; /* nécessaire pour dropdown */
+}
+
+.user-profile:hover {
+  transform: scale(1.05);
+  color: #ffbb33;
+}
+
+.user-icon {
+  font-size: 2rem;
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Menu déroulant */
+.dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
+  min-width: 180px;
+  padding: 0.5rem 0;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #333;
+  transition: background 0.3s;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header.sidebar-open {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+}

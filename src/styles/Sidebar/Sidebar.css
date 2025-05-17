@@ -1,0 +1,39 @@
+/* src/styles/Sidebar/Sidebar.css */
+.sidebar{
+  background-color: rgb(17, 59, 5);
+  text-align: center;
+  border-radius: none;
+  border: none;
+  padding: 200px;
+  border-radius: 1px;
+}
+img{
+  margin-top: -20px;
+}
+.sidebar-menu {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 20px;
+}
+
+.menu-item {
+  margin-bottom: 15px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  margin-bottom: 3rem;
+}
+
+.menu-icon {
+  margin-right: 10px;
+}
+
+.menu-item.active .menu-link {
+  color: var(--bs-warning) !important; /* Couleur bleue Bootstrap pour l’élément actif */
+  font-weight: bold;
+}

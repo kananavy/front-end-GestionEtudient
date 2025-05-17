@@ -1,0 +1,97 @@
+/* AuthPage.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .auth-container { /* Renommé de 'container' pour éviter les conflits potentiels */
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+  }
+  
+  .auth-logo { /* Renommé de 'logo' */
+    width: 100px;
+    margin-bottom: 20px;
+  }
+  
+  .auth-container h1 {
+    margin-bottom: 20px;
+  }
+  
+  .auth-container label {
+    display: block;
+    margin: 10px 0 5px;
+    text-align: left; /* Ajouté pour une meilleure lisibilité */
+  }
+  
+  .auth-container input[type="text"],
+  .auth-container input[type="password"],
+  .auth-container select {
+    box-sizing: border-box; /* Important pour que padding ne s'ajoute pas à la largeur */
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .remember-me {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Aligner à gauche */
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  /* Ciblez l'input spécifiquement pour le margin */
+  .remember-me input[type="checkbox"] {
+     width: auto; /* Ne pas prendre toute la largeur */
+     margin-right: 8px; /* Espace entre la case et le texte */
+     margin-bottom: 0; /* Annuler le margin-bottom général */
+  }
+  
+  /* Ciblez le label spécifiquement */
+  .remember-me label {
+      margin: 0; /* Annuler le margin du label général */
+      display: inline; /* Afficher sur la même ligne */
+  }
+  
+  
+  .auth-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px; /* Bonne pratique */
+  }
+  
+  .auth-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .auth-container p {
+    margin-top: 15px;
+  }
+  
+  .auth-container a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .auth-container a:hover {
+    text-decoration: underline;
+  }
+  
+
